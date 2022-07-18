@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Socket.io chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+    <form id="form" class="flex fixed bottom-0 right-0 left-0 m-6">
+      <input
+        id="input"
+        autocomplete="off"
+        class="border px-4 py-2 w-full focus:outline-none focus:ring"
+        autofocus
+      />
+      <input
+        type="submit"
+        value="Send"
+        class="bg-blue-500 text-white px-6 py-2 text-sm cursor-pointer"
+      />
+    </form>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let socket = io();
+    let form = document.getElementById("form");
+    let input = document.getElementById("input");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (input.value.trim()) { 
+        socket.emit("chat message", input.value);
+        input.value = "";
+      }
+    });
+    socket.on("chat message", function (msg) {
+      let item = document.createElement("li");
+      item.textContent = msg;
+      item.classList.add("p-2");
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight+400);
+    });
+  </script>
+</html>
